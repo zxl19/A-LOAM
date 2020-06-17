@@ -59,7 +59,7 @@ using std::sin;
 
 const double scanPeriod = 0.1;
 
-const int systemDelay = 0; 
+const int systemDelay = 0;
 int systemInitCount = 0;
 bool systemInited = false;
 int N_SCANS = 0;
@@ -80,7 +80,7 @@ std::vector<ros::Publisher> pubEachScan;
 
 bool PUB_EACH_LINE = false;
 
-double MINIMUM_RANGE = 0.1; 
+double MINIMUM_RANGE = 0.1;
 
 template <typename PointT>
 void removeClosedPointCloud(const pcl::PointCloud<PointT> &cloud_in,
@@ -114,7 +114,7 @@ void removeClosedPointCloud(const pcl::PointCloud<PointT> &cloud_in,
 void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
 {
     if (!systemInited)
-    { 
+    {
         systemInitCount++;
         if (systemInitCount >= systemDelay)
         {
@@ -175,6 +175,8 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
                 continue;
             }
         }
+        // *HDL-32
+        /*
         else if (N_SCANS == 32)
         {
             scanID = int((angle + 92.0/3.0) * 3.0 / 4.0);
@@ -184,14 +186,77 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
                 continue;
             }
         }
+        */
+        // *Robosense-32
+        else if (N_SCANS == 32)
+        {
+            int tmp = round(angle);
+            if (angle < 1.7 && angle > -4.7)
+            {
+                scanID = round(angle / 0.33) + 20;
+            }
+            else if (tmp == 15)
+            {
+                scanID = 31;
+            }
+            else if (tmp == 10)
+            {
+                scanID = 30;
+            }
+            else if (tmp == 7)
+            {
+                scanID = 29;
+            }
+            else if (tmp == 5)
+            {
+                scanID = 28;
+            }
+            else if (tmp == 3)
+            {
+                scanID = 27;
+            }
+            else if (tmp == 2 && angle > 2)
+            {
+                scanID = 26;
+            }
+            else if (tmp == -5 && angle < -5)
+            {
+                scanID = 5;
+            }
+            else if (tmp == -6)
+            {
+                scanID = 4;
+            }
+            else if (tmp == -8)
+            {
+                scanID = 3;
+            }
+            else if (tmp == -10)
+            {
+                scanID = 2;
+            }
+            else if (tmp == -15)
+            {
+                scanID = 1;
+            }
+            else if (tmp == -25)
+            {
+                scanID = 0;
+            }
+            else
+            {
+                count--;
+                continue;
+            }
+        }
         else if (N_SCANS == 64)
-        {   
+        {
             if (angle >= -8.83)
                 scanID = int((2 - angle) * 3.0 + 0.5);
             else
                 scanID = N_SCANS / 2 + int((-8.83 - angle) * 2.0 + 0.5);
 
-            // use [0 50]  > 50 remove outlies 
+            // use [0 50]  > 50 remove outlies
             if (angle > 2 || angle < -24.33 || scanID > 50 || scanID < 0)
             {
                 count--;
@@ -237,7 +302,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
 
         float relTime = (ori - startOri) / (endOri - startOri);
         point.intensity = scanID + scanPeriod * relTime;
-        laserCloudScans[scanID].push_back(point); 
+        laserCloudScans[scanID].push_back(point);
     }
     
     cloudSize = count;
@@ -306,7 +371,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
                     }
                     else if (largestPickedNum <= 20)
                     {                        
-                        cloudLabel[ind] = 1; 
+                        cloudLabel[ind] = 1;
                         cornerPointsLessSharp.push_back(laserCloud->points[ind]);
                     }
                     else
@@ -314,7 +379,7 @@ void laserCloudHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloudMsg)
                         break;
                     }
 
-                    cloudNeighborPicked[ind] = 1; 
+                    cloudNeighborPicked[ind] = 1;
 
                     for (int l = 1; l <= 5; l++)
                     {
