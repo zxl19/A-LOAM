@@ -279,13 +279,14 @@ int main(int argc, char **argv)
                 {
                     corner_correspondence = 0;
                     plane_correspondence = 0;
-
+                    // 使用ceres solver进行LM法求解
                     //ceres::LossFunction *loss_function = NULL;
+                    // 定义损失函数
                     ceres::LossFunction *loss_function = new ceres::HuberLoss(0.1);
                     ceres::LocalParameterization *q_parameterization =
                         new ceres::EigenQuaternionParameterization();
                     ceres::Problem::Options problem_options;
-
+                    // 定义问题
                     ceres::Problem problem(problem_options);
                     problem.AddParameterBlock(para_q, 4, q_parameterization);
                     problem.AddParameterBlock(para_t, 3);
@@ -491,6 +492,7 @@ int main(int argc, char **argv)
                     }
 
                     TicToc t_solver;
+                    // 利用QR法求解
                     ceres::Solver::Options options;
                     options.linear_solver_type = ceres::DENSE_QR;
                     options.max_num_iterations = 4;
@@ -500,7 +502,7 @@ int main(int argc, char **argv)
                     printf("solver time %f ms \n", t_solver.toc());
                 }
                 printf("optimization twice time %f \n", t_opt.toc());
-
+                // 对求出的姿态进行更新
                 t_w_curr = t_w_curr + q_w_curr * t_last_curr;
                 q_w_curr = q_w_curr * q_last_curr;
             }
