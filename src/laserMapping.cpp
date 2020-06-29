@@ -139,14 +139,17 @@ ros::Publisher pubLaserCloudSurround, pubLaserCloudMap, pubLaserCloudFullRes, pu
 nav_msgs::Path laserAfterMappedPath;
 
 // set initial guess
+// 设定初始的姿态变换
 void transformAssociateToMap()
 {
+	// q_wodom_curr，接受的odometry中的数据
 	q_w_curr = q_wmap_wodom * q_wodom_curr;
 	t_w_curr = q_wmap_wodom * t_wodom_curr + t_wmap_wodom;
 }
 
 void transformUpdate()
 {
+	// 优化后得到的姿态变换信息
 	q_wmap_wodom = q_w_curr * q_wodom_curr.inverse();
 	t_wmap_wodom = t_w_curr - q_wmap_wodom * t_wodom_curr;
 }
@@ -228,6 +231,7 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 	pubOdomAftMappedHighFrec.publish(odomAftMapped);
 }
 
+// 主要部分
 void process()
 {
 	while(1)

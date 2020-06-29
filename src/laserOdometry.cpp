@@ -129,7 +129,6 @@ void TransformToStart(PointType const *const pi, PointType *const po)
 }
 
 // transform all lidar points to the start of the next frame
-
 void TransformToEnd(PointType const *const pi, PointType *const po)
 {
     // undistort point first
@@ -299,6 +298,7 @@ int main(int argc, char **argv)
                     // find correspondence for corner features
                     for (int i = 0; i < cornerPointsSharpNum; ++i)
                     {
+                        // 将特征转换到每一帧初始时刻再进行匹配
                         TransformToStart(&(cornerPointsSharp->points[i]), &pointSel);
                         kdtreeCornerLast->nearestKSearch(pointSel, 1, pointSearchInd, pointSearchSqDis);
 
@@ -387,6 +387,7 @@ int main(int argc, char **argv)
                     // find correspondence for plane features
                     for (int i = 0; i < surfPointsFlatNum; ++i)
                     {
+                        // 将特征转换到每一帧初始时刻再进行匹配
                         TransformToStart(&(surfPointsFlat->points[i]), &pointSel);
                         kdtreeSurfLast->nearestKSearch(pointSel, 1, pointSearchInd, pointSearchSqDis);
 
