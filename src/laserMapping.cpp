@@ -136,6 +136,8 @@ PointType pointOri, pointSel;
 
 ros::Publisher pubLaserCloudSurround, pubLaserCloudMap, pubLaserCloudFullRes, pubOdomAftMapped, pubOdomAftMappedHighFrec, pubLaserAfterMappedPath;
 
+ros::Publisher pubRelativeOdometry;
+
 nav_msgs::Path laserAfterMappedPath;
 
 // set initial guess
@@ -216,6 +218,20 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 
 	Eigen::Quaterniond q_w_curr = q_wmap_wodom * q_wodom_curr;
 	Eigen::Vector3d t_w_curr = q_wmap_wodom * t_wodom_curr + t_wmap_wodom;
+
+	// 发布相对位姿
+	nav_msgs::Odometry relativeOdometry;
+	relativeOdometry.header.frame_id = "/camera_init";
+	relativeOdometry.child_frame_id = "/aft_mapped";
+	relativeOdometry.header.stamp = ros::Time().fromSec(timeSurfPointsLessFlat);
+	relativeOdometry.pose.pose.orientation.x = q_wodom_curr.x();
+	relativeOdometry.pose.pose.orientation.y = q_wodom_curr.y();
+	relativeOdometry.pose.pose.orientation.z = q_wodom_curr.z();
+	relativeOdometry.pose.pose.orientation.w = q_wodom_curr.w();
+	relativeOdometry.pose.pose.position.x = t_wodom_curr.x();
+	relativeOdometry.pose.pose.position.y = t_wodom_curr.y();
+	relativeOdometry.pose.pose.position.z = t_wodom_curr.z();
+	pubRelativeOdometry.publish(relativeOdometry);
 
 	nav_msgs::Odometry odomAftMapped;
 	odomAftMapped.header.frame_id = "/camera_init";
@@ -928,6 +944,9 @@ int main(int argc, char **argv)
 	pubOdomAftMappedHighFrec = nh.advertise<nav_msgs::Odometry>("/aft_mapped_to_init_high_frec", 100);
 
 	pubLaserAfterMappedPath = nh.advertise<nav_msgs::Path>("/aft_mapped_path", 100);
+
+	// 发布相对位姿
+    pubRelativeOdometry = nh.advertise<nav_msgs::Odometry>("/relative_odom", 100);
 
 	for (int i = 0; i < laserCloudNum; i++)
 	{
