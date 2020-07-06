@@ -219,7 +219,8 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 	Eigen::Quaterniond q_w_curr = q_wmap_wodom * q_wodom_curr;
 	Eigen::Vector3d t_w_curr = q_wmap_wodom * t_wodom_curr + t_wmap_wodom;
 
-	// 发布相对位姿
+	// *发布位姿增量
+	// !目前输出仍是相对位姿
 	nav_msgs::Odometry relativeOdometry;
 	relativeOdometry.header.frame_id = "/camera_init";
 	relativeOdometry.child_frame_id = "/aft_mapped";
