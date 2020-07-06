@@ -523,6 +523,8 @@ int main(int argc, char **argv)
             laserOdometry.pose.pose.position.y = t_w_curr.y();
             laserOdometry.pose.pose.position.z = t_w_curr.z();
             pubLaserOdometry.publish(laserOdometry);
+            
+            // !在这里输出帧间相对位姿
 
             geometry_msgs::PoseStamped laserPose;
             laserPose.header = laserOdometry.header;

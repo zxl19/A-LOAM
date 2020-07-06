@@ -33,7 +33,7 @@
 // CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
 // ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
 // POSSIBILITY OF SUCH DAMAGE.
-
+// 包含库
 #include <math.h>
 #include <vector>
 #include <aloam_velodyne/common.h>
@@ -198,6 +198,7 @@ void laserCloudFullResHandler(const sensor_msgs::PointCloud2ConstPtr &laserCloud
 	mBuf.unlock();
 }
 
+// 接收激光里程计输入，转换到地图坐标系
 //receive odomtry
 void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 {
@@ -219,8 +220,8 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 	Eigen::Quaterniond q_w_curr = q_wmap_wodom * q_wodom_curr;
 	Eigen::Vector3d t_w_curr = q_wmap_wodom * t_wodom_curr + t_wmap_wodom;
 
-	// *发布位姿增量
-	// !目前输出仍是相对位姿
+	// todo:发布位姿增量
+	// !目前输出仍是相对第一帧位姿
 	nav_msgs::Odometry relativeOdometry;
 	relativeOdometry.header.frame_id = "/camera_init";
 	relativeOdometry.child_frame_id = "/aft_mapped";
