@@ -222,18 +222,19 @@ void laserOdometryHandler(const nav_msgs::Odometry::ConstPtr &laserOdometry)
 
 	// todo:发布位姿增量
 	// !目前输出仍是相对第一帧位姿
-	nav_msgs::Odometry relativeOdometry;
-	relativeOdometry.header.frame_id = "/camera_init";
-	relativeOdometry.child_frame_id = "/aft_mapped";
-	relativeOdometry.header.stamp = ros::Time().fromSec(timeSurfPointsLessFlat);
-	relativeOdometry.pose.pose.orientation.x = q_wodom_curr.x();
-	relativeOdometry.pose.pose.orientation.y = q_wodom_curr.y();
-	relativeOdometry.pose.pose.orientation.z = q_wodom_curr.z();
-	relativeOdometry.pose.pose.orientation.w = q_wodom_curr.w();
-	relativeOdometry.pose.pose.position.x = t_wodom_curr.x();
-	relativeOdometry.pose.pose.position.y = t_wodom_curr.y();
-	relativeOdometry.pose.pose.position.z = t_wodom_curr.z();
-	pubRelativeOdometry.publish(relativeOdometry);
+	// !此处有误，转移到laserOdometry.cpp
+	// nav_msgs::Odometry relativeOdometry;
+	// relativeOdometry.header.frame_id = "/camera_init";
+	// relativeOdometry.child_frame_id = "/aft_mapped";
+	// relativeOdometry.header.stamp = ros::Time().fromSec(timeSurfPointsLessFlat);
+	// relativeOdometry.pose.pose.orientation.x = q_wodom_curr.x();
+	// relativeOdometry.pose.pose.orientation.y = q_wodom_curr.y();
+	// relativeOdometry.pose.pose.orientation.z = q_wodom_curr.z();
+	// relativeOdometry.pose.pose.orientation.w = q_wodom_curr.w();
+	// relativeOdometry.pose.pose.position.x = t_wodom_curr.x();
+	// relativeOdometry.pose.pose.position.y = t_wodom_curr.y();
+	// relativeOdometry.pose.pose.position.z = t_wodom_curr.z();
+	// pubRelativeOdometry.publish(relativeOdometry);
 
 	nav_msgs::Odometry odomAftMapped;
 	odomAftMapped.header.frame_id = "/camera_init";
