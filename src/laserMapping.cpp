@@ -136,7 +136,7 @@ PointType pointOri, pointSel;
 
 ros::Publisher pubLaserCloudSurround, pubLaserCloudMap, pubLaserCloudFullRes, pubOdomAftMapped, pubOdomAftMappedHighFrec, pubLaserAfterMappedPath;
 
-ros::Publisher pubRelativeOdometry;
+// ros::Publisher pubRelativeOdometry;
 
 nav_msgs::Path laserAfterMappedPath;
 
@@ -348,7 +348,7 @@ void process()
 				for (int j = 0; j < laserCloudHeight; j++)
 				{
 					for (int k = 0; k < laserCloudDepth; k++)
-					{ 
+					{
 						int i = laserCloudWidth - 1;
 						pcl::PointCloud<PointType>::Ptr laserCloudCubeCornerPointer =
 							laserCloudCornerArray[i + laserCloudWidth * j + laserCloudWidth * laserCloudHeight * k]; 
@@ -375,7 +375,7 @@ void process()
 			}
 
 			while (centerCubeI >= laserCloudWidth - 3)
-			{ 
+			{
 				for (int j = 0; j < laserCloudHeight; j++)
 				{
 					for (int k = 0; k < laserCloudDepth; k++)
@@ -605,7 +605,7 @@ void process()
 						kdtreeCornerFromMap->nearestKSearch(pointSel, 5, pointSearchInd, pointSearchSqDis); 
 
 						if (pointSearchSqDis[4] < 1.0)
-						{ 
+						{
 							std::vector<Eigen::Vector3d> nearCorners;
 							Eigen::Vector3d center(0, 0, 0);
 							for (int j = 0; j < 5; j++)
@@ -632,7 +632,7 @@ void process()
 							Eigen::Vector3d unit_direction = saes.eigenvectors().col(2);
 							Eigen::Vector3d curr_point(pointOri.x, pointOri.y, pointOri.z);
 							if (saes.eigenvalues()[2] > 3 * saes.eigenvalues()[1])
-							{ 
+							{
 								Eigen::Vector3d point_on_line = center;
 								Eigen::Vector3d point_a, point_b;
 								point_a = 0.1 * unit_direction + point_on_line;
@@ -640,8 +640,8 @@ void process()
 
 								ceres::CostFunction *cost_function = LidarEdgeFactor::Create(curr_point, point_a, point_b, 1.0);
 								problem.AddResidualBlock(cost_function, loss_function, parameters, parameters + 4);
-								corner_num++;	
-							}							
+								corner_num++;
+							}
 						}
 						/*
 						else if(pointSearchSqDis[4] < 0.01 * sqrtDis)
@@ -654,7 +654,7 @@ void process()
 													laserCloudCornerFromMap->points[pointSearchInd[j]].z);
 								center = center + tmp;
 							}
-							center = center / 5.0;	
+							center = center / 5.0;
 							Eigen::Vector3d curr_point(pointOri.x, pointOri.y, pointOri.z);
 							ceres::CostFunction *cost_function = LidarDistanceFactor::Create(curr_point, center);
 							problem.AddResidualBlock(cost_function, loss_function, parameters, parameters + 4);
@@ -719,7 +719,7 @@ void process()
 													laserCloudSurfFromMap->points[pointSearchInd[j]].z);
 								center = center + tmp;
 							}
-							center = center / 5.0;	
+							center = center / 5.0;
 							Eigen::Vector3d curr_point(pointOri.x, pointOri.y, pointOri.z);
 							ceres::CostFunction *cost_function = LidarDistanceFactor::Create(curr_point, center);
 							problem.AddResidualBlock(cost_function, loss_function, parameters, parameters + 4);
@@ -949,7 +949,7 @@ int main(int argc, char **argv)
 	pubLaserAfterMappedPath = nh.advertise<nav_msgs::Path>("/aft_mapped_path", 100);
 
 	// 发布相对位姿
-    pubRelativeOdometry = nh.advertise<nav_msgs::Odometry>("/relative_odom", 100);
+    // pubRelativeOdometry = nh.advertise<nav_msgs::Odometry>("/relative_odom", 100);
 
 	for (int i = 0; i < laserCloudNum; i++)
 	{
